@@ -1,16 +1,21 @@
 "use client"
 
-import { setCookie, getCookie, hasCookie } from 'cookies-next';
+import { setCookie, getCookie, hasCookie, CookieValueTypes } from 'cookies-next';
 import React, { useState, createContext, useEffect } from "react";
 // import { addCookie, getCookie } from '@/app/cookies';
 
-export const ThemeContext = createContext({});
+export type ThemeProps = {
+   theme: CookieValueTypes;
+   toggleTheme: () => void;
+}
+
+export const ThemeContext = createContext<ThemeProps>({} as ThemeProps);
 
 const ThemeContextProvider = ({ children }: { children: React.ReactNode }) => {
-   const [theme, setTheme] = useState("Claro");
+   const [theme, setTheme] = useState(() => hasCookie('theme') ? getCookie('theme') : "Claro");
 
    useEffect(() => {
-      setTheme(() => hasCookie('theme') ? getCookie('theme') : "Claro")
+      return setTheme(hasCookie('theme') ? getCookie('theme') : "Claro")
    }, [])
 
    const toggleTheme = () => {
